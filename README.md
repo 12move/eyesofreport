@@ -2,7 +2,7 @@
 
 Eyes of report is an open source IT toolbox which provides all the facilities to analyse your application availability regarding service contract defined with users.
 
-To compute application availability, Eyes Of Report centralize all your equipement monitoring log (from one or several monitoring platform) in its own database. The solution is initially developed to be plugged on nagios based monitoring plateform like Eyes Of Network, Centreon, Shinken...
+To compute application availability, Eyes Of Report centralizes all your equipement monitoring log (from one or several monitoring platform) in its own database. The solution is initially developed to be plugged on nagios based monitoring plateform like Eyes Of Network, Centreon, Shinken...
 However connectors can be developed to plug other kind of monitoring solution.
 
 Eyes Of Report can centralize logs and equipments from as much monitoring platform as you want !
