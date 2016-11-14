@@ -16,7 +16,7 @@ Eyes Of report is composed of 4 main bricks :
 Data base management system used is Mariadb (Embedded in Eyes Of report installation)
 
 <p align="center">
-  <a href="https://raw.githubusercontent.com/benoitvillage/Eyes-Of-Report/master/SAMPLES/Reporting_2.PNG" target="_blank">
+  <a href="https://raw.githubusercontent.com/eyesofreport/eyesofreport/master/SAMPLES/Reporting_2.PNG" target="_blank">
   <img src="https://github.com/benoitvillage/Eyes-Of-Report/blob/master/SAMPLES/Reporting_2.PNG" width="100" height="100"/>
   </a>
   <a href="https://raw.githubusercontent.com/benoitvillage/Eyes-Of-Report/master/SAMPLES/Threshold.PNG" target="_blank">
