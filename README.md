@@ -17,7 +17,7 @@ Data base management system used is Mariadb (Embedded in Eyes Of report installa
 
 <p align="center">
   <a href="https://raw.githubusercontent.com/eyesofreport/eyesofreport/master/SAMPLES/Reporting_2.PNG" target="_blank">
-  <img src="https://github.com/benoitvillage/Eyes-Of-Report/blob/master/SAMPLES/Reporting_2.PNG" width="100" height="100"/>
+  <img src="https://github.com/eyesofreport/eyesofreport/blob/master/SAMPLES/Reporting_2.PNG" width="100" height="100"/>
   </a>
   <a href="https://raw.githubusercontent.com/benoitvillage/Eyes-Of-Report/master/SAMPLES/Threshold.PNG" target="_blank">
   <img src="https://github.com/benoitvillage/Eyes-Of-Report/blob/master/SAMPLES/Threshold.PNG" width="100" height="100"/>
