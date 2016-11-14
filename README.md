@@ -54,7 +54,7 @@ Data base management system used is Mariadb (Embedded in Eyes Of report installa
   </a>
 </p>
 
-## Installation Prerequisite
+## Installation Prerequisites
 
 **OS** : Centos 7 x64 7.1.1503. Download CentOS-7-x86_64-DVD-1503-01.iso at http://mirror.nsc.liu.se/centos-store/7.1.1503/isos/x86_64/CentOS-7-x86_64-Minimal-1503-01.iso
 Eyes Of Report installation don't need internet for security reason, and use initial Centos 7 packet version for it's own packet dependencies. Be sure you didn't execute any "yum update" after Centos 7 installation.
