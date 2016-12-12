@@ -32,7 +32,7 @@
 		<tr align="center">
 			<td colspan="5" class="blanc">
 				<FORM method="POST" ENCTYPE="multipart/form-data">
-					<INPUT type=hidden name=MAX_FILE_SIZE  VALUE=2000000>
+					<INPUT type=hidden name=MAX_FILE_SIZE  VALUE=200000000>
 					<INPUT class="file" type=file name="filename">
 					<INPUT class="button" type=submit name="upload" value="Upload">
 				</FORM>
