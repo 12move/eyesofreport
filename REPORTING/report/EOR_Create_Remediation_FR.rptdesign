@@ -1206,9 +1206,9 @@ from d_service inner join d_host on dho_id = ? and dse_id = ?
                                     <property name="marginLeft">5pt</property>
                                     <expression name="valueExpr">if(row["agg_service_id"] == -1)&#13;
 &#13;
-"mysqldump -uroot -p thruk " + params["log_table"].value + " --where \"time between " + row["agg_epoch_deb"] + " and " +  row["agg_epoch_end"] + "\" > /var/archives/eor/backup_injection/" + row["agg_epoch_deb"] + row["agg_epoch_end"] + row["agg_host_id"] + "_" + params["log_table"].value + ".sql";&#13;
+"mysqldump -uroot -p --skip-add-drop-table --no-create-info thruk " + params["log_table"].value + " --where \"time between " + row["agg_epoch_deb"] + " and " +  row["agg_epoch_end"] + "\" > /var/archives/eor/backup_injection/" + row["agg_epoch_deb"] + row["agg_epoch_end"] + row["agg_host_id"] + "_" + params["log_table"].value + ".sql";&#13;
 &#13;
-else "mysqldump -uroot -p thruk " + params["log_table"].value + " --where \"time between " + row["agg_epoch_deb"] + " and " +  row["agg_epoch_end"] + "\" > /var/archives/eor/backup_injection/" + row["agg_epoch_deb"] + row["agg_epoch_end"] + row["agg_host_id"] + row["agg_service_id"] + "_" + params["log_table"].value + ".sql";</expression>
+else "mysqldump -uroot -p --skip-add-drop-table --no-create-info thruk " + params["log_table"].value + " --where \"time between " + row["agg_epoch_deb"] + " and " +  row["agg_epoch_end"] + "\" > /var/archives/eor/backup_injection/" + row["agg_epoch_deb"] + row["agg_epoch_end"] + row["agg_host_id"] + row["agg_service_id"] + "_" + params["log_table"].value + ".sql";</expression>
                                     <property name="contentType">html</property>
                                 </text-data>
                             </cell>
