@@ -31,7 +31,7 @@ $infos = $req->fetchall();
 	    </thead>
 		<tbody id="body_table">
 			<?php foreach($infos as $info){
-                $id_conpamy = $info['id_company'];
+                $id = $info['id_company'];
                 $company_name = $info['company_name'];
 
 				print "<tr><td><span class=\"glyphicon glyphicon-share-alt text-warning\"></span></td><td>$company_name</td><td><button type=\"button\" class=\"btn btn-primary\" onclick=EditSelection($id)><span class=\"glyphicon glyphicon-pencil\"></span></button>  <button type=\"button\" class=\"btn btn-danger\" onclick=RemoveSelection($id)><span class=\"glyphicon glyphicon-trash\"></span></button></td></tr>";
