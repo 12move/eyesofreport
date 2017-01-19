@@ -1,18 +1,35 @@
 #!/bin/bash
 
-# Michael Aubertin Nov 2014
+#########################################
+#
+# Copyright (C) 2016 EyesOfNetwork Team
+# DEV NAME : # Michael Aubertin Nov 2014 & Benoit Village Jan 2016
+# 
+# VERSION 2.01
+# 
+# LICENCE :
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; either version 2
+# of the License, or (at your option) any later version.
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+#########################################
 
 export LANG=en_US
 
 usage() {
- echo "Usage :manuel_inject_downtime_V2.sh
+echo "Usage :manuel_inject_downtime_V2.sh
 	login
 	Password
 	Type [Host or Service]
 	Backend Thruk accronym (ex: f6dd1) or Solarwind
 	Start Date of outage (YYYY_MM_DD_hh:mm)
 	End Date of outage (YYYY_MM_DD_hh:mm)
-	Name \(host or host.service\)% Take care about '%' the separate host name and service name"
+	Name (host or host.service)% Take care about '%' the separate host name and service name"
 exit
 }
 
@@ -49,10 +66,8 @@ SMINUTE="`echo $STARTD | cut -d'_' -f4 | cut -d':' -f2`"
 EMINUTE="`echo $ENDD | cut -d'_' -f4 | cut -d':' -f2`"
 EPOCHSTART="`date -d "${SYEAR}${SMONTH}${SDAY} ${SHOUR}${SMINUTE}" +%s 2> /dev/null`"
 EPOCHEND="`date -d "${EYEAR}${EMONTH}${EDAY} ${EHOUR}${EMINUTE}" +%s 2> /dev/null`"
-EPOCHSTART="$(($EPOCHSTART - 5))"
-EPOCHEND="$(($EPOCHEND+ 60))"
-
-
+EPOCHSTART="`expr $EPOCHSTART + 5`"
+EPOCHEND="`expr $EPOCHEND - 5`"
 
 
 if [ ! -n "$EPOCHSTART" ]; then
@@ -72,14 +87,14 @@ if [ ! -n "$EPOCHEND" ]; then
 	usage
 fi
 DIFFTime="`expr $EPOCHEND - $EPOCHSTART`"
-#if [ $DIFFTime -lt 300 ]; then
-#	echo ""
-#	echo ""
-#	echo "The time scope couldn't be less than 5 minutes."
-#	echo ""
-#	echo ""
-#	usage
-#fi
+if [ $DIFFTime -lt 300 ]; then
+	echo ""
+	echo ""
+	echo "The time scope couldn't be less than 5 minutes."
+	echo ""
+	echo ""
+	usage
+fi
 
 if [ ! -d /tmp/raw_add ]; then mkdir -p /tmp/raw_add; fi
 TMPDIR="`mktemp -d /tmp/raw_add/Add_thruk_raw_downtime.XXXXXXXX`"
@@ -145,34 +160,40 @@ if [ ! -n "${host_id}" ]; then
 fi
 
 if [ "$TYPE" = "Service" ]; then
-	if [ "$SERVICE" = "Hoststatus" ]; then
-		echo -n ""
-	else 
-		echo "SELECT service_id from ${BACKEND}_service where host_id='${host_id}' AND service_description='${SERVICE}';"
-		service_id="`echo "SELECT service_id from ${BACKEND}_service where host_id='${host_id}' AND service_description='${SERVICE}';" | mysql -u${USER} -p${PASSWD} thruk | grep -v "service_id"`"
-		if [ ! -n "${service_id}" ]; then
-			echo ""
-			echo ""
-			echo "Service ${SERVICE} on Host ${HOST} not found in ${BACKEND} backend."
-			echo ""
-			echo ""
-			rm -rf $TMPDIR
-			usage
-		fi
+	echo "SELECT service_id from ${BACKEND}_service where host_id='${host_id}' AND service_description='${SERVICE}';"
+	service_id="`echo "SELECT service_id from ${BACKEND}_service where host_id='${host_id}' AND service_description='${SERVICE}';" | mysql -u${USER} -p${PASSWD} thruk | grep -v "service_id"`"
+	if [ ! -n "${service_id}" ]; then
+		echo ""
+		echo ""
+		echo "Service ${SERVICE} on Host ${HOST} not found in ${BACKEND} backend."
+		echo ""
+		echo ""
+		rm -rf $TMPDIR
+		usage
 	fi
 fi
 
 MAX_Message_id="`echo "SELECT max(output_id) + 1 from ${BACKEND}_plugin_output;" | mysql -u${USER} -p${PASSWD} thruk | grep -v "max"`"
 MAX_Message_id_stop="`expr $MAX_Message_id + 1`"
-
 echo -n "Adding downtime for "
 if [ "$TYPE" = "Host" ]; then
 	echo -n "host $HOST "
 	echo "insert into ${BACKEND}_plugin_output VALUES ($MAX_Message_id,'STARTED; Host has entered a corrected period of scheduled downtime');" | mysql -u${USER} -p${PASSWD} thruk 2> /dev/null
 	echo "insert into ${BACKEND}_plugin_output VALUES ($MAX_Message_id_stop,'STOPPED; Host has exited a corrected period of scheduled downtime');" | mysql -u${USER} -p${PASSWD} thruk 2> /dev/null
 
-	echo "insert into ${BACKEND}_log VALUES ($EPOCHSTART,1,'HOST DOWNTIME ALERT',NULL,'',NULL,$host_id,NULL,1,$MAX_Message_id);" | mysql -u${USER} -p${PASSWD} thruk 2> /dev/null
-	echo "insert into ${BACKEND}_log VALUES ($EPOCHEND,1,'HOST DOWNTIME ALERT',NULL,'',NULL,$host_id,NULL,1,$MAX_Message_id_stop);" | mysql -u${USER} -p${PASSWD} thruk 2> /dev/null
+echo "insert into ${BACKEND}_log VALUES ($EPOCHSTART,1,'HOST DOWNTIME ALERT',NULL,'',NULL,$host_id,NULL,1,$MAX_Message_id);" | mysql -u${USER} -p${PASSWD} thruk 2> /dev/null
+EPOCHLOOP="$EPOCHSTART"
+TimeRange="`expr $EPOCHEND - $EPOCHSTART`"
+LOOP="`expr $TimeRange / 60`"
+LOOP="`expr $LOOP + 1`" 
+while ([ $LOOP -gt 0 ]); do 
+	echo "insert into ${BACKEND}_log VALUES ($EPOCHLOOP,1,'HOST DOWNTIME ALERT',NULL,'',NULL,$host_id,NULL,1,$MAX_Message_id);" | mysql -u${USER} -p${PASSWD} thruk 2> /dev/null
+	EPOCHLOOP="`expr $EPOCHLOOP + 60`"
+	LOOP="`expr $LOOP - 1`"
+	echo -n "."
+done
+
+echo "insert into ${BACKEND}_log VALUES ($EPOCHEND,1,'HOST DOWNTIME ALERT',NULL,'',NULL,$host_id,NULL,1,$MAX_Message_id_stop);" | mysql -u${USER} -p${PASSWD} thruk 2> /dev/null
  
 	Mysql_Return="`echo $?`"
 	if [ $Mysql_Return -gt 0 ]; then
@@ -186,29 +207,26 @@ if [ "$TYPE" = "Host" ]; then
 	fi
 	echo "at $CurrentDate .......[OK]"
 fi
-
 if [ "$TYPE" = "Service" ]; then
-	
 	echo -n "service $SERVICE on host $HOST "
-	
-	if [ "$SERVICE" = "Hoststatus" ]; then
-		echo "insert into ${BACKEND}_plugin_output VALUES ($MAX_Message_id,'STARTED; Host has entered a corrected period of scheduled downtime');" | mysql -u${USER} -p${PASSWD} thruk 2> /dev/null
-		echo "insert into ${BACKEND}_plugin_output VALUES ($MAX_Message_id_stop,'STOPPED; Host has exited a corrected period of scheduled downtime');" | mysql -u${USER} -p${PASSWD} thruk 2> /dev/null
-	else
-		echo "insert into ${BACKEND}_plugin_output VALUES ($MAX_Message_id,'STARTED; Service has entered a corrected period of scheduled downtime');" | mysql -u${USER} -p${PASSWD} thruk 2> /dev/null
-		echo "insert into ${BACKEND}_plugin_output VALUES ($MAX_Message_id_stop,'STOPPED; Service has exited a corrected period of scheduled downtime');" | mysql -u${USER} -p${PASSWD} thruk 2> /dev/null
-	fi
-	
-	if [ "$SERVICE" = "Hoststatus" ]; then	
-		echo "delete from ${BACKEND}_log where host_id = $host_id and service_id is null and type like '%DOWNTIME%' and time between $EPOCHSTART and $EPOCHEND;" | mysql -u${USER} -p${PASSWD} thruk 2> /dev/null
-		echo "insert into ${BACKEND}_log VALUE ($EPOCHSTART,1,'HOST DOWNTIME ALERT',NULL,'',NULL,$host_id,NULL,1,$MAX_Message_id);" | mysql -u${USER} -p${PASSWD} thruk 2> /dev/null
-		echo "insert into ${BACKEND}_log VALUE ($EPOCHEND,1,'HOST DOWNTIME ALERT',NULL,'',NULL,$host_id,NULL,1,$MAX_Message_id_stop);" | mysql -u${USER} -p${PASSWD} thruk 2> /dev/null
-	else
-		echo "delete from ${BACKEND}_log where host_id = $host_id and service_id = $service_id and type like '%DOWNTIME%' and time between $EPOCHSTART and $EPOCHEND;" | mysql -u${USER} -p${PASSWD} thruk 2> /dev/null
-		echo "insert into ${BACKEND}_log VALUE ($EPOCHSTART,1,'SERVICE DOWNTIME ALERT',NULL,'',NULL,$host_id,$service_id,1,$MAX_Message_id);" | mysql -u${USER} -p${PASSWD} thruk 2> /dev/null
-		echo "insert into ${BACKEND}_log VALUE ($EPOCHEND,1,'SERVICE DOWNTIME ALERT',NULL,'',NULL,$host_id,$service_id,1,$MAX_Message_id_stop);" | mysql -u${USER} -p${PASSWD} thruk 2> /dev/null
-	fi
+	echo "insert into ${BACKEND}_plugin_output VALUES ($MAX_Message_id,'STARTED; Service has entered a corrected period of scheduled downtime');" | mysql -u${USER} -p${PASSWD} thruk 2> /dev/null
+	echo "insert into ${BACKEND}_plugin_output VALUES ($MAX_Message_id_stop,'STOPPED; Service has exited a corrected period of scheduled downtime');" | mysql -u${USER} -p${PASSWD} thruk 2> /dev/null
 
+echo "insert into ${BACKEND}_log VALUES ($EPOCHSTART,1,'SERVICE DOWNTIME ALERT',NULL,'',NULL,$host_id,$service_id,1,$MAX_Message_id);" | mysql -u${USER} -p${PASSWD} thruk 2> /dev/null
+EPOCHLOOP="$EPOCHSTART"
+TimeRange="`expr $EPOCHEND - $EPOCHSTART`"
+LOOP="`expr $TimeRange / 60`"
+LOOP="`expr $LOOP + 1`" 
+while ([ $LOOP -gt 0 ]); do 
+	echo "insert into ${BACKEND}_log VALUES ($EPOCHLOOP,1,'SERVICE DOWNTIME ALERT',NULL,'',NULL,$host_id,$service_id,1,$MAX_Message_id_stop);" | mysql -u${USER} -p${PASSWD} thruk 2> /dev/null
+	EPOCHLOOP="`expr $EPOCHLOOP + 60`"
+	LOOP="`expr $LOOP - 1`"
+	echo -n "."
+done
+echo "insert into ${BACKEND}_log VALUES ($EPOCHEND,1,'SERVICE DOWNTIME ALERT',NULL,'',NULL,$host_id,$service_id,1,$MAX_Message_id_stop);" | mysql -u${USER} -p${PASSWD} thruk 2> /dev/null
+
+ 	#echo "insert into ${BACKEND}_log VALUES ($EPOCHSTART,1,'SERVICE DOWNTIME ALERT',NULL,'',NULL,$host_id,$service_id,1,$MAX_Message_id);"
+	#echo "insert into ${BACKEND}_log VALUES ($EPOCHEND,1,'SERVICE DOWNTIME ALERT',NULL,'',NULL,$host_id,$service_id,1,$MAX_Message_id_stop);"
  
 	Mysql_Return="`echo $?`"
 	if [ $Mysql_Return -gt 0 ]; then

@@ -169,7 +169,7 @@ reportContext.setPersistentGlobalVariable("RemoteHost", request.getRemoteHost())
                     <property name="isRequired">true</property>
                     <property name="dataSetName">ds_application_sql</property>
                     <expression name="valueExpr">row["dcc_id"]</expression>
-                    <expression name="labelExpr">row["dcc_name"]</expression>
+                    <expression name="labelExpr">row["dcc_alias"]</expression>
                     <expression name="sortByColumn">dataSetRow["dcc_name"]</expression>
                     <property name="sortDirection">asc</property>
                     <property name="dataType">integer</property>
@@ -7260,6 +7260,7 @@ else "Accès utilisateurs";</expression>
                     <property name="backgroundColor">#FFFFFF</property>
                     <property name="textAlign">center</property>
                     <grid id="2526">
+                        <property name="textAlign">center</property>
                         <property name="width">3.1666666666666665in</property>
                         <column id="2527">
                             <property name="width">3.1666666666666665in</property>
@@ -7290,8 +7291,10 @@ else "Accès utilisateurs";</expression>
                             </cell>
                         </row>
                         <row id="2528">
+                            <property name="textAlign">center</property>
                             <property name="height">100%</property>
                             <cell id="2529">
+                                <property name="textAlign">center</property>
                                 <text-data id="2473">
                                     <property name="fontFamily">"Calibri"</property>
                                     <property name="fontSize">26pt</property>
@@ -7417,8 +7420,10 @@ else "Accès utilisateurs";</expression>
                             </cell>
                         </row>
                         <row id="2530">
+                            <property name="textAlign">center</property>
                             <property name="height">100%</property>
                             <cell id="2531">
+                                <property name="textAlign">center</property>
                                 <text-data id="2474">
                                     <property name="fontFamily">"Calibri"</property>
                                     <property name="fontSize">18pt</property>
@@ -12495,42 +12500,6 @@ else "Accès utilisateurs";</expression>
                                         </property>
                                         <property name="backgroundColor">#F0F1F2</property>
                                     </extended-item>
-                                </property>
-                            </extended-item>
-                            <extended-item extensionName="MeasureView" id="1587">
-                                <property name="measure">unavailability_plus_seuil</property>
-                                <property name="detail">
-                                    <extended-item extensionName="AggregationCell" id="1588">
-                                        <property name="aggregationOnRow">Month/yearmonth</property>
-                                        <property name="aggregationOnColumn">Category/dap_category</property>
-                                        <property name="width">0in</property>
-                                        <property name="content">
-                                            <data id="2802">
-                                                <property name="resultSetColumn">unavailability_plus_seuil_Month/yearmonth_Category/dap_category</property>
-                                            </data>
-                                        </property>
-                                    </extended-item>
-                                </property>
-                                <property name="header">
-                                    <extended-item extensionName="CrosstabCell" id="1590"/>
-                                </property>
-                            </extended-item>
-                            <extended-item extensionName="MeasureView" id="2779">
-                                <property name="measure">seuil</property>
-                                <property name="detail">
-                                    <extended-item extensionName="AggregationCell" id="2780">
-                                        <property name="aggregationOnRow">Month/yearmonth</property>
-                                        <property name="aggregationOnColumn">Category/dap_category</property>
-                                        <property name="width">0in</property>
-                                        <property name="content">
-                                            <data id="2803">
-                                                <property name="resultSetColumn">seuil_Month/yearmonth_Category/dap_category</property>
-                                            </data>
-                                        </property>
-                                    </extended-item>
-                                </property>
-                                <property name="header">
-                                    <extended-item extensionName="CrosstabCell" id="2783"/>
                                 </property>
                             </extended-item>
                         </property>

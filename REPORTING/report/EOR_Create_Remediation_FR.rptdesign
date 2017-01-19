@@ -12,7 +12,7 @@
             <property name="dataType">string</property>
             <property name="distinct">true</property>
             <simple-property-list name="defaultValue">
-                <value type="constant">106</value>
+                <value type="constant">280</value>
             </simple-property-list>
             <list-property name="selectionList"/>
             <property name="paramType">simple</property>
@@ -27,7 +27,7 @@
             <property name="dataType">string</property>
             <property name="distinct">true</property>
             <simple-property-list name="defaultValue">
-                <value type="constant">34</value>
+                <value type="constant">218</value>
             </simple-property-list>
             <list-property name="selectionList"/>
             <property name="paramType">simple</property>
@@ -42,7 +42,7 @@
             <property name="dataType">string</property>
             <property name="distinct">true</property>
             <simple-property-list name="defaultValue">
-                <value type="constant">6039f_host</value>
+                <value type="constant">f6dd1_host</value>
             </simple-property-list>
             <list-property name="selectionList"/>
             <property name="paramType">simple</property>
@@ -57,7 +57,7 @@
             <property name="dataType">string</property>
             <property name="distinct">true</property>
             <simple-property-list name="defaultValue">
-                <value type="constant">6039f_service</value>
+                <value type="constant">f6dd1_service</value>
             </simple-property-list>
             <list-property name="selectionList"/>
             <property name="paramType">simple</property>
@@ -72,7 +72,7 @@
             <property name="dataType">string</property>
             <property name="distinct">true</property>
             <simple-property-list name="defaultValue">
-                <value type="constant">6039f_plugin_output</value>
+                <value type="constant">f6dd1_plugin_output</value>
             </simple-property-list>
             <list-property name="selectionList"/>
             <property name="paramType">simple</property>
@@ -87,7 +87,7 @@
             <property name="dataType">string</property>
             <property name="distinct">true</property>
             <simple-property-list name="defaultValue">
-                <value type="constant">6039f_log</value>
+                <value type="constant">f6dd1_log</value>
             </simple-property-list>
             <list-property name="selectionList"/>
             <property name="paramType">simple</property>
@@ -102,7 +102,7 @@
             <property name="dataType">integer</property>
             <property name="distinct">true</property>
             <simple-property-list name="defaultValue">
-                <value type="constant">1451638800</value>
+                <value type="constant">1454346983</value>
             </simple-property-list>
             <list-property name="selectionList"/>
             <property name="paramType">simple</property>
@@ -117,7 +117,7 @@
             <property name="dataType">string</property>
             <property name="distinct">true</property>
             <simple-property-list name="defaultValue">
-                <value type="constant">1451642400</value>
+                <value type="constant">1454347966</value>
             </simple-property-list>
             <list-property name="selectionList"/>
             <property name="paramType">simple</property>
@@ -132,7 +132,7 @@
             <property name="dataType">string</property>
             <property name="distinct">true</property>
             <simple-property-list name="defaultValue">
-                <value type="constant">6039f</value>
+                <value type="constant">f6dd1</value>
             </simple-property-list>
             <list-property name="selectionList"/>
             <property name="paramType">simple</property>
@@ -161,7 +161,7 @@
                 </ex-property>
             </list-property>
             <property name="odaDriverClass">com.mysql.jdbc.Driver</property>
-            <property name="odaURL">jdbc:mysql://localhost:3306/eor_dwh</property>
+            <property name="odaURL">jdbc:mysql://192.168.26.131:3306/eor_dwh</property>
             <property name="odaUser">eyesofreport</property>
             <encrypted-property name="odaPassword" encryptionID="base64">U2FpbnRUaG9tYXMsMjAxNA==</encrypted-property>
             <property name="odaJndiName">java:jboss/datasources/DWH</property>
@@ -647,8 +647,10 @@ date_format(from_unixtime(?),'%H:%i') as time_beg,
 date_format(from_unixtime(?),'%H:%i') as time_end,
 dho_name,
 dse_name
-from d_service inner join d_host on dho_id = ? and dse_id = ?
-
+from d_host_service 
+inner join d_host on dhs_host = dho_id
+inner join d_service on dhs_service = dse_id
+where dhs_host = ? and dhs_service = ?
 ]]></xml-property>
             <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
 <model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
@@ -1409,9 +1411,9 @@ else "mysql -u root -p thruk " + " &lt; /var/archives/eor/backup_injection/" + r
                                     <property name="marginTop">5pt</property>
                                     <property name="marginLeft">5pt</property>
                                     <expression name="valueExpr">if(row["agg_service_id"] == -1)&#13;
-"echo \"Valid;Date debut;Heure debut;Date fin;Heure fin;Type;Host\" > /srv/eyesofreport/etl/injection/" + params["epoch_deb"].value + params["epoch_end"].value + row["agg_host_id"] + "_maintenance.csv";&#13;
+"echo \"Valid;Date debut;Heure debut;Date fin;Heure fin;Type;Host;Service\" > /srv/eyesofreport/etl/injection/" + params["epoch_deb"].value + params["epoch_end"].value + row["agg_host_id"] + "_maintenance.csv";&#13;
 else&#13;
-"echo \"Valid;Date debut;Heure debut;Date fin;Heure fin;Type;Host\" > /srv/eyesofreport/etl/injection/" + params["epoch_deb"].value + params["epoch_end"].value + row["agg_host_id"] + row["agg_service_id"] + "_maintenance.csv";</expression>
+"echo \"Valid;Date debut;Heure debut;Date fin;Heure fin;Type;Host;Service\" > /srv/eyesofreport/etl/injection/" + params["epoch_deb"].value + params["epoch_end"].value + row["agg_host_id"] + row["agg_service_id"] + "_maintenance.csv";</expression>
                                     <property name="contentType">html</property>
                                 </text-data>
                                 <text-data id="1618">
@@ -1419,9 +1421,9 @@ else&#13;
                                     <property name="color">#FFFFFF</property>
                                     <property name="marginLeft">5pt</property>
                                     <expression name="valueExpr">if(row["agg_service_id"] == -1)&#13;
-"echo \"O;"+row._outer["date_begin"] +";"+row._outer["time_beg"]+";"+ row._outer["date_end"]+";"+row._outer["time_end"]+";"+"Maintenance"+";"+ row._outer["DHO_NAME"] +"\" >> /srv/eyesofreport/etl/injection/" + params["epoch_deb"].value + params["epoch_end"].value + row["agg_host_id"] + "_maintenance.csv";&#13;
+"echo \"O;"+row._outer["date_begin"] +";"+row._outer["time_beg"]+";"+ row._outer["date_end"]+";"+row._outer["time_end"]+";"+"Maintenance"+";"+ row._outer["DHO_NAME"] +";Hoststatus" +"\" >> /srv/eyesofreport/etl/injection/" + params["epoch_deb"].value + params["epoch_end"].value + row["agg_host_id"] + "_maintenance.csv";&#13;
 else&#13;
-"echo \"O;"+row._outer["date_begin"] +";"+row._outer["time_beg"]+";"+ row._outer["date_end"]+";"+row._outer["time_end"]+";"+"Maintenance"+";"+ row._outer["DHO_NAME"] +"\" >> /srv/eyesofreport/etl/injection/" + params["epoch_deb"].value + params["epoch_end"].value + row["agg_host_id"] + row["agg_service_id"] + "_maintenance.csv";</expression>
+"echo \"O;"+row._outer["date_begin"] +";"+row._outer["time_beg"]+";"+ row._outer["date_end"]+";"+row._outer["time_end"]+";"+"Maintenance"+";"+ row._outer["DHO_NAME"] +";"+ row._outer["DSE_NAME"] +"\" >> /srv/eyesofreport/etl/injection/" + params["epoch_deb"].value + params["epoch_end"].value + row["agg_host_id"] + row["agg_service_id"] + "_maintenance.csv";</expression>
                                     <property name="contentType">html</property>
                                 </text-data>
                                 <text-data id="1619">
@@ -1432,9 +1434,9 @@ else&#13;
                                     <property name="marginLeft">5pt</property>
                                     <property name="marginBottom">5pt</property>
                                     <expression name="valueExpr">if(row["agg_service_id"] == -1)&#13;
-"/srv/eyesofreport/etl/scripts/massive_injecti_HOST_downtime-or-outage.sh root #ROOTPASSWORD " + params["source_prefix"].value + " Downtime " + params["epoch_deb"].value + params["epoch_end"].value + row["agg_host_id"] + "_maintenance.csv";&#13;
+"/srv/eyesofreport/etl/scripts/massive_inject_HOST_downtime-or-outage.sh root #ROOTPASSWORD " + params["source_prefix"].value + " Downtime " + params["epoch_deb"].value + params["epoch_end"].value + row["agg_host_id"] + "_maintenance.csv";&#13;
 else&#13;
-"/srv/eyesofreport/etl/scripts/massive_injecti_HOST_downtime-or-outage.sh root #ROOTPASSWORD " + params["source_prefix"].value + " Downtime " + params["epoch_deb"].value + params["epoch_end"].value + row["agg_host_id"] + row["agg_service_id"] + "_maintenance.csv";</expression>
+"/srv/eyesofreport/etl/scripts/massive_inject_HOST_downtime-or-outage.sh root #ROOTPASSWORD " + params["source_prefix"].value + " Downtime " + params["epoch_deb"].value + params["epoch_end"].value + row["agg_host_id"] + row["agg_service_id"] + "_maintenance.csv";</expression>
                                     <property name="contentType">html</property>
                                 </text-data>
                             </cell>
@@ -1599,9 +1601,9 @@ else&#13;
                                     <property name="marginLeft">5pt</property>
                                     <property name="marginBottom">5pt</property>
                                     <expression name="valueExpr">if(row["agg_service_id"] == -1)&#13;
-"/srv/eyesofreport/etl/scripts/massive_injecti_HOST_downtime-or-outage.sh root #ROOTPASSWORD " + params["source_prefix"].value + " Outage " + params["epoch_deb"].value + params["epoch_end"].value + row["agg_host_id"] + "_outage.csv";&#13;
+"/srv/eyesofreport/etl/scripts/massive_inject_HOST_downtime-or-outage.sh root #ROOTPASSWORD " + params["source_prefix"].value + " Outage " + params["epoch_deb"].value + params["epoch_end"].value + row["agg_host_id"] + "_outage.csv";&#13;
 else&#13;
-"/srv/eyesofreport/etl/scripts/massive_injecti_HOST_downtime-or-outage.sh root #ROOTPASSWORD " + params["source_prefix"].value + " Outage " + params["epoch_deb"].value + params["epoch_end"].value + row["agg_host_id"] + row["agg_service_id"] + "_outage.csv";</expression>
+"/srv/eyesofreport/etl/scripts/massive_inject_HOST_downtime-or-outage.sh root #ROOTPASSWORD " + params["source_prefix"].value + " Outage " + params["epoch_deb"].value + params["epoch_end"].value + row["agg_host_id"] + row["agg_service_id"] + "_outage.csv";</expression>
                                     <property name="contentType">html</property>
                                 </text-data>
                             </cell>

@@ -114,9 +114,6 @@ reportContext.setPersistentGlobalVariable("RemoteHost", request.getRemoteHost())
                     <expression name="labelExpr" type="javascript">dataSetRow["dcc_alias"]</expression>
                     <property name="dataType">string</property>
                     <property name="distinct">true</property>
-                    <simple-property-list name="defaultValue">
-                        <value type="constant">Complet 7/7 24/24</value>
-                    </simple-property-list>
                     <list-property name="selectionList"/>
                     <property name="paramType">simple</property>
                     <property name="controlType">list-box</property>
@@ -148,7 +145,7 @@ reportContext.setPersistentGlobalVariable("RemoteHost", request.getRemoteHost())
                 </ex-property>
             </list-property>
             <property name="odaDriverClass">com.mysql.jdbc.Driver</property>
-            <property name="odaURL">jdbc:mysql://localhost:3306/eor_dwh</property>
+            <property name="odaURL">jdbc:mysql://192.168.26.131:3306/eor_dwh</property>
             <property name="odaUser">root</property>
             <encrypted-property name="odaPassword" encryptionID="base64">cm9vdDY2</encrypted-property>
             <property name="odaJndiName">java:jboss/datasources/DWH</property>
@@ -11524,20 +11521,6 @@ else row["diff_nb_day"] + "j" + row["diff_nb_hour"] + "h" + row["diff_nb_min"] +
           <Entries xsi:type="attribute:Gradient">
             <StartColor>
               <Transparency>255</Transparency>
-              <Red>160</Red>
-              <Green>43</Green>
-              <Blue>105</Blue>
-            </StartColor>
-            <EndColor>
-              <Transparency>255</Transparency>
-              <Red>206</Red>
-              <Green>135</Green>
-              <Blue>122</Blue>
-            </EndColor>
-          </Entries>
-          <Entries xsi:type="attribute:Gradient">
-            <StartColor>
-              <Transparency>255</Transparency>
               <Red>11</Red>
               <Green>101</Green>
               <Blue>162</Blue>
@@ -11547,6 +11530,20 @@ else row["diff_nb_day"] + "j" + row["diff_nb_hour"] + "h" + row["diff_nb_min"] +
               <Red>59</Red>
               <Green>195</Green>
               <Blue>179</Blue>
+            </EndColor>
+          </Entries>
+          <Entries xsi:type="attribute:Gradient">
+            <StartColor>
+              <Transparency>255</Transparency>
+              <Red>160</Red>
+              <Green>43</Green>
+              <Blue>105</Blue>
+            </StartColor>
+            <EndColor>
+              <Transparency>255</Transparency>
+              <Red>206</Red>
+              <Green>135</Green>
+              <Blue>122</Blue>
             </EndColor>
           </Entries>
           <Entries xsi:type="attribute:ColorDefinition">
@@ -11814,10 +11811,6 @@ else row["diff_nb_day"] + "j" + row["diff_nb_hour"] + "h" + row["diff_nb_min"] +
                   <SeriesParameterName></SeriesParameterName>
                 </URLValues>
                 <PropertiesMap>
-                  <Key>MenuItem</Key>
-                  <Value>color:Black;fontSize:10pt;paddingLeft:10px;paddingRight:10px;paddingTop:2px;paddingBottom:2px</Value>
-                </PropertiesMap>
-                <PropertiesMap>
                   <Key>Menu</Key>
                   <Value>zIndex:99999;backgroundColor:#FAFFF8;width:auto;height:auto;border:1px solid #333333;filter:progid:DXImageTransform.Microsoft.Shadow(Color:#333333,Direction=120,strength=5)</Value>
                 </PropertiesMap>
@@ -11828,6 +11821,10 @@ else row["diff_nb_day"] + "j" + row["diff_nb_hour"] + "h" + row["diff_nb_min"] +
                 <PropertiesMap>
                   <Key>OnMouseOver</Key>
                   <Value>backgroundColor:#245DDB;color:#FFFFFF</Value>
+                </PropertiesMap>
+                <PropertiesMap>
+                  <Key>MenuItem</Key>
+                  <Value>color:Black;fontSize:10pt;paddingLeft:10px;paddingRight:10px;paddingTop:2px;paddingBottom:2px</Value>
                 </PropertiesMap>
               </Value>
             </Action>
@@ -11865,15 +11862,15 @@ else row["diff_nb_day"] + "j" + row["diff_nb_hour"] + "h" + row["diff_nb_min"] +
           <Entries xsi:type="attribute:Gradient">
             <StartColor>
               <Transparency>255</Transparency>
-              <Red>11</Red>
-              <Green>101</Green>
-              <Blue>162</Blue>
+              <Red>160</Red>
+              <Green>43</Green>
+              <Blue>105</Blue>
             </StartColor>
             <EndColor>
               <Transparency>255</Transparency>
-              <Red>59</Red>
-              <Green>195</Green>
-              <Blue>179</Blue>
+              <Red>206</Red>
+              <Green>135</Green>
+              <Blue>122</Blue>
             </EndColor>
           </Entries>
           <Entries xsi:type="attribute:ColorDefinition">
@@ -12059,15 +12056,15 @@ else row["diff_nb_day"] + "j" + row["diff_nb_hour"] + "h" + row["diff_nb_min"] +
           <Entries xsi:type="attribute:Gradient">
             <StartColor>
               <Transparency>255</Transparency>
-              <Red>160</Red>
-              <Green>43</Green>
-              <Blue>105</Blue>
+              <Red>11</Red>
+              <Green>101</Green>
+              <Blue>162</Blue>
             </StartColor>
             <EndColor>
               <Transparency>255</Transparency>
-              <Red>206</Red>
-              <Green>135</Green>
-              <Blue>122</Blue>
+              <Red>59</Red>
+              <Green>195</Green>
+              <Blue>179</Blue>
             </EndColor>
           </Entries>
         </SeriesPalette>
@@ -12154,10 +12151,6 @@ else row["diff_nb_day"] + "j" + row["diff_nb_hour"] + "h" + row["diff_nb_min"] +
                   <SeriesParameterName></SeriesParameterName>
                 </URLValues>
                 <PropertiesMap>
-                  <Key>MenuItem</Key>
-                  <Value>color:Black;fontSize:10pt;paddingLeft:10px;paddingRight:10px;paddingTop:2px;paddingBottom:2px</Value>
-                </PropertiesMap>
-                <PropertiesMap>
                   <Key>Menu</Key>
                   <Value>zIndex:99999;backgroundColor:#FAFFF8;width:auto;height:auto;border:1px solid #333333;filter:progid:DXImageTransform.Microsoft.Shadow(Color:#333333,Direction=120,strength=5)</Value>
                 </PropertiesMap>
@@ -12168,6 +12161,10 @@ else row["diff_nb_day"] + "j" + row["diff_nb_hour"] + "h" + row["diff_nb_min"] +
                 <PropertiesMap>
                   <Key>OnMouseOver</Key>
                   <Value>backgroundColor:#245DDB;color:#FFFFFF</Value>
+                </PropertiesMap>
+                <PropertiesMap>
+                  <Key>MenuItem</Key>
+                  <Value>color:Black;fontSize:10pt;paddingLeft:10px;paddingRight:10px;paddingTop:2px;paddingBottom:2px</Value>
                 </PropertiesMap>
               </Value>
             </Action>
@@ -12315,20 +12312,6 @@ else row["diff_nb_day"] + "j" + row["diff_nb_hour"] + "h" + row["diff_nb_min"] +
         <Entries xsi:type="attribute:Gradient">
           <StartColor>
             <Transparency>255</Transparency>
-            <Red>160</Red>
-            <Green>43</Green>
-            <Blue>105</Blue>
-          </StartColor>
-          <EndColor>
-            <Transparency>255</Transparency>
-            <Red>206</Red>
-            <Green>135</Green>
-            <Blue>122</Blue>
-          </EndColor>
-        </Entries>
-        <Entries xsi:type="attribute:Gradient">
-          <StartColor>
-            <Transparency>255</Transparency>
             <Red>11</Red>
             <Green>101</Green>
             <Blue>162</Blue>
@@ -12338,6 +12321,20 @@ else row["diff_nb_day"] + "j" + row["diff_nb_hour"] + "h" + row["diff_nb_min"] +
             <Red>59</Red>
             <Green>195</Green>
             <Blue>179</Blue>
+          </EndColor>
+        </Entries>
+        <Entries xsi:type="attribute:Gradient">
+          <StartColor>
+            <Transparency>255</Transparency>
+            <Red>160</Red>
+            <Green>43</Green>
+            <Blue>105</Blue>
+          </StartColor>
+          <EndColor>
+            <Transparency>255</Transparency>
+            <Red>206</Red>
+            <Green>135</Green>
+            <Blue>122</Blue>
           </EndColor>
         </Entries>
         <Entries xsi:type="attribute:ColorDefinition">
