@@ -99,7 +99,7 @@ if [ ! "`head -1 ${DataDir}/${FILEIN}`" == "Valid;Date debut;Heure debut;Date fi
 		usage
 fi
 
-for FileLine in `cat ${DataDir}/${FILEIN} | grep -v "Valid;Date debut;Heure debut;Date fin;Heure fin;Type;Host" | sed -e 's: :%:g' | sed -e 's:\[:\\\[:g' | sed -e 's:\]:\\\]:g'` ; do
+for FileLine in `cat ${DataDir}/${FILEIN} | grep -v "Valid;Date debut;Heure debut;Date fin;Heure fin;Type;Host;Service" | sed -e 's: :%:g' | sed -e 's:\[:\\\[:g' | sed -e 's:\]:\\\]:g'` ; do
 	echo $FileLine | sed -e 's:%: :g'
 	#O;22/10/2014;07:00;22/10/2014;07:30;Maintenance;arizona
 
@@ -147,14 +147,11 @@ for FileLine in `cat ${DataDir}/${FILEIN} | grep -v "Valid;Date debut;Heure debu
 
 	if [ "$TYPE" = "DOWNTIME" ]; then
 		echo "Adding Downtime for $Equipment from ${SYEAR}/${SMONTH}/${SDAY} ${SHOUR}:${SMINUTE} to ${EYEAR}/${EMONTH}/${EDAY} ${EHOUR}:${EMINUTE}"
-		echo ${SetDowntimeScript} ${USER} ${PASSWD} Service ${BACKEND} ${SYEAR}_${SMONTH}_${SDAY}_${SHOUR}:${SMINUTE} ${EYEAR}_${EMONTH}_${EDAY}_${EHOUR}:${EMINUTE} $Equipment%$Service
 		${SetDowntimeScript} ${USER} ${PASSWD} Service ${BACKEND} ${SYEAR}_${SMONTH}_${SDAY}_${SHOUR}:${SMINUTE} ${EYEAR}_${EMONTH}_${EDAY}_${EHOUR}:${EMINUTE} $Equipment%$Service
-		
-
 	fi
 	if [ "$TYPE" = "OUTAGE" ]; then
 		echo "Adding Outage for $Equipment from ${SYEAR}/${SMONTH}/${SDAY} ${SHOUR}:${SMINUTE} to ${EYEAR}/${EMONTH}/${EDAY} ${EHOUR}:${EMINUTE}"
-	    ${SetOutageScript} ${USER} ${PASSWD} Service ${BACKEND} ${SYEAR}_${SMONTH}_${SDAY}_${SHOUR}:${SMINUTE} ${EYEAR}_${EMONTH}_${EDAY}_${EHOUR}:${EMINUTE} $Equipment
+	    ${SetOutageScript} ${USER} ${PASSWD} Service ${BACKEND} ${SYEAR}_${SMONTH}_${SDAY}_${SHOUR}:${SMINUTE} ${EYEAR}_${EMONTH}_${EDAY}_${EHOUR}:${EMINUTE} $Equipment%$Service
 	fi
 
 done

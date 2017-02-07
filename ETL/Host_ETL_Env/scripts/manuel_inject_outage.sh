@@ -1,23 +1,7 @@
 #!/bin/bash
 
-#########################################
-#
-# Copyright (C) 2016 EyesOfNetwork Team
-# DEV NAME : # Michael Aubertin Nov 2014 & Benoit Village Jan 2016
-# 
-# VERSION 2.01
-# 
-# LICENCE :
-# This program is free software; you can redistribute it and/or
-# modify it under the terms of the GNU General Public License
-# as published by the Free Software Foundation; either version 2
-# of the License, or (at your option) any later version.
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-#########################################
+# Michael Aubertin Nov 2014
+# Benoit Village Jan 2016
 
 export LANG=en_US
 
@@ -66,7 +50,7 @@ SMINUTE="`echo $STARTD | cut -d'_' -f4 | cut -d':' -f2`"
 EMINUTE="`echo $ENDD | cut -d'_' -f4 | cut -d':' -f2`"
 EPOCHSTART="`date -d "${SYEAR}${SMONTH}${SDAY} ${SHOUR}${SMINUTE}" +%s 2> /dev/null`"
 EPOCHEND="`date -d "${EYEAR}${EMONTH}${EDAY} ${EHOUR}${EMINUTE}" +%s 2> /dev/null`"
-EPOCHEND="`expr $EPOCHEND - 1`"
+#EPOCHEND="`expr $EPOCHEND + 1`"
 CURRENT_EPOCH="`date +%s`"
 
 
@@ -86,15 +70,15 @@ if [ ! -n "$EPOCHEND" ]; then
 	echo ""
 	usage
 fi
-DIFFTime="`expr $EPOCHEND - $EPOCHSTART`"
-if [ $DIFFTime -lt 300 ]; then
-	echo ""
-	echo ""
-	echo "The time scope couldn't be less than 5 minutes."
-	echo ""
-	echo ""
-	usage
-fi
+# DIFFTime="`expr $EPOCHEND - $EPOCHSTART`"
+# if [ $DIFFTime -lt 300 ]; then
+# 	echo ""
+# 	echo ""
+# 	echo "The time scope couldn't be less than 5 minutes."
+# 	echo ""
+# 	echo ""
+# 	usage
+# fi
 
 if [ ! -d /tmp/raw_add ]; then mkdir -p /tmp/raw_add; fi
 TMPDIR="`mktemp -d /tmp/raw_add/Add_thruk_raw.XXXXXXXX`"
@@ -160,25 +144,29 @@ if [ ! "${BACKEND}" = "Solarwind" ]; then
 	fi
 
 	if [ "$TYPE" = "Service" ]; then
-		echo "SELECT service_id from ${BACKEND}_service where host_id='${host_id}' AND service_description='${SERVICE}';"
-		service_id="`echo "SELECT service_id from ${BACKEND}_service where host_id='${host_id}' AND service_description='${SERVICE}';" | mysql -u${USER} -p${PASSWD} thruk | grep -v "service_id"`"
-		if [ ! -n "${service_id}" ]; then
-			echo ""
-			echo ""
-			echo "Service ${SERVICE} on Host ${HOST} not found in ${BACKEND} backend."
-			echo ""
-			echo ""
-			rm -rf $TMPDIR
-			usage
-		fi
+		if [ "$SERVICE" = "Hoststatus" ]; then
+			echo -n ""
+		else 	
+			#echo "SELECT service_id from ${BACKEND}_service where host_id='${host_id}' AND service_description='${SERVICE}';"
+			service_id="`echo "SELECT service_id from ${BACKEND}_service where host_id='${host_id}' AND service_description='${SERVICE}';" | mysql -u${USER} -p${PASSWD} thruk | grep -v "service_id"`"
+			if [ ! -n "${service_id}" ]; then
+				echo ""
+				echo ""
+				echo "Service ${SERVICE} on Host ${HOST} not found in ${BACKEND} backend."
+				echo ""
+				echo ""
+				rm -rf $TMPDIR
+				usage
+			fi
+		fi	
 	fi
 fi
 
 TimeToHandle=$EPOCHSTART
 MAX_Message_id_DOWN="`echo "SELECT max(output_id) + 1 from ${BACKEND}_plugin_output;" | mysql -u${USER} -p${PASSWD} thruk | grep -v "max"`"
 MAX_Message_id_UP="`expr $MAX_Message_id_DOWN + 1`"
-echo "insert into ${BACKEND}_plugin_output VALUES ($MAX_Message_id_DOWN,'CRITICAL;HARD;2;$CURRENT_EPOCH');" | mysql -u${USER} -p${PASSWD} thruk 2> /dev/null
-echo "insert into ${BACKEND}_plugin_output VALUES ($MAX_Message_id_UP,'UP;HARD;1;$CURRENT_EPOCH');" | mysql -u${USER} -p${PASSWD} thruk 2> /dev/null
+#echo "insert into ${BACKEND}_plugin_output VALUES ($MAX_Message_id_DOWN,'CRITICAL;HARD;2;$CURRENT_EPOCH');" | mysql -u${USER} -p${PASSWD} thruk 2> /dev/null
+#echo "insert into ${BACKEND}_plugin_output VALUES ($MAX_Message_id_UP,'UP;HARD;1;$CURRENT_EPOCH');" | mysql -u${USER} -p${PASSWD} thruk 2> /dev/null
 #echo "insert into ${BACKEND}_plugin_output VALUES ($MAX_Message_id_DOWN,'CRITICAL;HARD;2;$CURRENT_EPOCH');" 
 #echo "insert into ${BACKEND}_plugin_output VALUES ($MAX_Message_id_UP,'UP;HARD;1;$CURRENT_EPOCH');" 
 Mysql_Return="`echo $?`"
@@ -224,35 +212,22 @@ if [ ! "${BACKEND}" = "Solarwind" ]; then
       fi
       echo "from `date -d @${EPOCHSTART}` to `date -d @${EPOCHEND}` .......[OK]"
    fi	
-   if [ "$TYPE" = "Service" ]; then
-			echo -n "service $SERVICE on host $HOST "
-      echo "insert into ${BACKEND}_log VALUES ($EPOCHSTART,1,'SERVICE ALERT',2,'HARD',NULL,$host_id,$service_id,1,$MAX_Message_id_DOWN);" | mysql -u${USER} -p${PASSWD} thruk 2> /dev/null
-      EPOCHLOOP="$EPOCHSTART"
-      TimeRange="`expr $EPOCHEND - $EPOCHSTART`"
-      LOOP="`expr $TimeRange / 60`"
-      LOOP="`expr $LOOP + 1`" 
-      while ([ $LOOP -gt 0 ]); do 
-      	echo "insert into ${BACKEND}_log VALUES ($EPOCHLOOP,1,'SERVICE ALERT',2,'HARD',NULL,$host_id,$service_id,1,$MAX_Message_id_DOWN);" | mysql -u${USER} -p${PASSWD} thruk 2> /dev/null
-      	EPOCHLOOP="`expr $EPOCHLOOP + 60`"
-      	LOOP="`expr $LOOP - 1`"
-      	echo -n "."
-      done
-      echo "insert into ${BACKEND}_log VALUES ($EPOCHEND,1,'SERVICE ALERT',0,'HARD',NULL,$host_id,$service_id,1,$MAX_Message_id_UP);" | mysql -u${USER} -p${PASSWD} thruk 2> /dev/null
-      #echo "insert into ${BACKEND}_log VALUES ($EPOCHSTART,1,'SERVICE ALERT',2,'HARD',NULL,$host_id,$service_id,1,$MAX_Message_id_DOWN);" 
-      #echo "insert into ${BACKEND}_log VALUES ($EPOCHEND,1,'SERVICE ALERT',0,'HARD',NULL,$host_id,$service_id,1,$MAX_Message_id_UP);" 
- 
-	    Mysql_Return="`echo $?`"
-	    if [ $Mysql_Return -gt 0 ]; then
-		 	   echo ""
-			   echo ""
-			   echo "last mysql resquest of insertion return an error."
-			   echo ""
-			   echo ""
-			   rm -rf $TMPDIR
-			   exit
-      fi
-      echo "from `date -d @${EPOCHSTART}` to `date -d @${EPOCHEND}` .......[OK]"
-   fi
+    if [ "$TYPE" = "Service" ]; then
+   
+	 if [ "$SERVICE" = "Hoststatus" ]; then
+		 echo -n "host $HOST "
+		 echo "delete from ${BACKEND}_log where time between $EPOCHSTART and $EPOCHEND and host_id = $host_id and service_id is null and state_type is not null;" | mysql -u${USER} -p${PASSWD} thruk 2> /dev/null
+		 echo "insert into ${BACKEND}_log VALUES ($EPOCHSTART,1,'HOST ALERT',2,'HARD',NULL,$host_id,null,1,$MAX_Message_id_DOWN);" | mysql -u${USER} -p${PASSWD} thruk 2> /dev/null
+		 echo "insert into ${BACKEND}_log VALUES ($EPOCHEND,1,'HOST ALERT',0,'HARD',NULL,$host_id,null,1,$MAX_Message_id_UP);" | mysql -u${USER} -p${PASSWD} thruk 2> /dev/null
+	 else
+		 echo -n "service $SERVICE on host $HOST "
+		 echo "delete from ${BACKEND}_log where time between $EPOCHSTART and $EPOCHEND and host_id = $host_id and service_id = $service_id and state_type is not null;" | mysql -u${USER} -p${PASSWD} thruk 2> /dev/null
+		 echo "insert into ${BACKEND}_log VALUES ($EPOCHSTART,1,'SERVICE ALERT',2,'HARD',NULL,$host_id,$service_id,1,$MAX_Message_id_DOWN);" | mysql -u${USER} -p${PASSWD} thruk 2> /dev/null
+		 echo "insert into ${BACKEND}_log VALUES ($EPOCHEND,1,'SERVICE ALERT',0,'HARD',NULL,$host_id,$service_id,1,$MAX_Message_id_UP);" | mysql -u${USER} -p${PASSWD} thruk 2> /dev/null
+	 fi
+     echo "from `date -d @${EPOCHSTART}` to `date -d @${EPOCHEND}` .......[OK]"
+	
+	fi
 fi
 
 

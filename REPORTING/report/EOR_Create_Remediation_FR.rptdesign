@@ -1578,9 +1578,9 @@ else&#13;
                                     <property name="marginTop">5pt</property>
                                     <property name="marginLeft">5pt</property>
                                     <expression name="valueExpr">if(row["agg_service_id"] == -1)&#13;
-"echo \"Valid;Date debut;Heure debut;Date fin;Heure fin;Type;Host\" > /srv/eyesofreport/etl/injection/" + params["epoch_deb"].value + params["epoch_end"].value + row["agg_host_id"] + "_outage.csv";&#13;
+"echo \"Valid;Date debut;Heure debut;Date fin;Heure fin;Type;Host;Service\" > /srv/eyesofreport/etl/injection/" + params["epoch_deb"].value + params["epoch_end"].value + row["agg_host_id"] + "_outage.csv";&#13;
 else&#13;
-"echo \"Valid;Date debut;Heure debut;Date fin;Heure fin;Type;Host\" > /srv/eyesofreport/etl/injection/" + params["epoch_deb"].value + params["epoch_end"].value + row["agg_host_id"] + row["agg_service_id"] + "_outage.csv";</expression>
+"echo \"Valid;Date debut;Heure debut;Date fin;Heure fin;Type;Host;Service\" > /srv/eyesofreport/etl/injection/" + params["epoch_deb"].value + params["epoch_end"].value + row["agg_host_id"] + row["agg_service_id"] + "_outage.csv";</expression>
                                     <property name="contentType">html</property>
                                 </text-data>
                                 <text-data id="1647">
@@ -1588,9 +1588,9 @@ else&#13;
                                     <property name="color">#FFFFFF</property>
                                     <property name="marginLeft">5pt</property>
                                     <expression name="valueExpr">if(row["agg_service_id"] == -1)&#13;
-"echo \"O;"+row._outer["date_begin"] +";"+row._outer["time_beg"]+";"+ row._outer["date_end"]+";"+row._outer["time_end"]+";"+"Incident"+";"+ row._outer["DHO_NAME"] +"\" >> /srv/eyesofreport/etl/injection/" + params["epoch_deb"].value + params["epoch_end"].value + row["agg_host_id"] + "_outage.csv";&#13;
+"echo \"O;"+row._outer["date_begin"] +";"+row._outer["time_beg"]+";"+ row._outer["date_end"]+";"+row._outer["time_end"]+";"+"Incident"+";"+ row._outer["DHO_NAME"] +";Hoststatus\" >> /srv/eyesofreport/etl/injection/" + params["epoch_deb"].value + params["epoch_end"].value + row["agg_host_id"] + "_outage.csv";&#13;
 else&#13;
-"echo \"O;"+row._outer["date_begin"] +";"+row._outer["time_beg"]+";"+ row._outer["date_end"]+";"+row._outer["time_end"]+";"+"Incident"+";"+ row._outer["DHO_NAME"] +"\" >> /srv/eyesofreport/etl/injection/" + params["epoch_deb"].value + params["epoch_end"].value + row["agg_host_id"] + row["agg_service_id"] + "_outage.csv";</expression>
+"echo \"O;"+row._outer["date_begin"] +";"+row._outer["time_beg"]+";"+ row._outer["date_end"]+";"+row._outer["time_end"]+";"+"Incident"+";"+ row._outer["DHO_NAME"] +";"+ row._outer["DSE_NAME"] +"\" >> /srv/eyesofreport/etl/injection/" + params["epoch_deb"].value + params["epoch_end"].value + row["agg_host_id"] + row["agg_service_id"] + "_outage.csv";</expression>
                                     <property name="contentType">html</property>
                                 </text-data>
                                 <text-data id="1648">
